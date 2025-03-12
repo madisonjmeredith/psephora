@@ -3,9 +3,41 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
-@source '../**/*.js';
+@source '../**/*.jsx';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Type — a classical serif for questions, Plex for UI, mono for tallies */
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+    /* Palette — marble & ink with an aged-bronze (verdigris) accent */
+    --color-marble: #f3f4f0;
+    --color-marble-deep: #e9ebe4;
+    --color-ink: #1b2432;
+    --color-ink-soft: #48505d;
+    --color-line: #e0e3db;
+    --color-stone: #8a9a93;
+    --color-verdigris: #1c8a6f;
+    --color-verdigris-deep: #12654f;
+    --color-verdigris-wash: #e4f0eb;
+    --color-ochre: #b0812b;
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    body {
+        background-color: var(--color-marble);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+    }
+
+    ::selection {
+        background-color: var(--color-verdigris);
+        color: white;
+    }
 }
