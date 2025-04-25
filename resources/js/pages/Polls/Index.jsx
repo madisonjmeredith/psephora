@@ -17,6 +17,12 @@ function PollCard({ poll }) {
                 </h3>
                 <div className="mt-3 flex items-center gap-3 font-mono text-xs uppercase tracking-wide text-stone">
                     <span>{pebbleCount(poll.votes_count)} cast</span>
+                    {poll.city && (
+                        <span className="text-stone/80">
+                            {poll.city}
+                            {poll.distance_miles != null && ` · ${poll.distance_miles} mi`}
+                        </span>
+                    )}
                     {poll.is_closed && (
                         <span className="rounded-full bg-marble-deep px-2 py-0.5 text-ink-soft">
                             closed
@@ -31,7 +37,7 @@ function PollCard({ poll }) {
     );
 }
 
-export default function Index({ polls }) {
+export default function Index({ polls, near }) {
     return (
         <Layout>
             <Head title="Polls" />
@@ -60,7 +66,7 @@ export default function Index({ polls }) {
             <section>
                 <h2 className="mb-5 flex items-baseline justify-between border-b border-line pb-3">
                     <span className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">
-                        Recent polls
+                        {near ? `Polls near ${near}` : 'Recent polls'}
                     </span>
                     <span className="font-mono text-xs tabular-nums text-stone">
                         {polls.length}

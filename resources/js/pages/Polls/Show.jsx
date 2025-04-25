@@ -123,6 +123,7 @@ export default function Show({ poll, hasVoted, votedOptionId }) {
                     {poll.question}
                 </h1>
                 <div className="mt-3 flex items-center gap-3 font-mono text-xs uppercase tracking-wide text-stone">
+                    {poll.city && <span>Asked from {poll.city}</span>}
                     {hasVoted && !poll.is_closed && (
                         <span className="text-verdigris-deep">You’ve cast your pebble</span>
                     )}
