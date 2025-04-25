@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureVoterToken;
 use App\Http\Requests\StorePollRequest;
 use App\Models\Poll;
 use App\Models\PollOption;
+use App\Support\Geolocation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,22 +17,40 @@ use Inertia\Response;
 class PollController extends Controller
 {
     /**
-     * List every poll, newest first, with its running vote total.
+     * List polls: closest to the visitor first, or newest first if we can't
+     * place them. Each poll carries its city and (when located) its distance.
      */
-    public function index(): Response
+    public function index(Request $request, Geolocation $geo): Response
     {
+        $here = $geo->locate($request->ip());
+
         $polls = Poll::query()
             ->withCount('votes')
             ->latest()
             ->get()
-            ->map(fn (Poll $poll): array => [
-                'slug' => $poll->slug,
-                'question' => $poll->question,
-                'votes_count' => $poll->votes_count,
-                'is_closed' => $poll->isClosed(),
-            ]);
+            ->map(function (Poll $poll) use ($geo, $here): array {
+                $distance = ($here && $poll->latitude !== null && $poll->longitude !== null)
+                    ? (int) round($geo->distanceMiles($here['latitude'], $here['longitude'], $poll->latitude, $poll->longitude))
+                    : null;
+
+                return [
+                    'slug' => $poll->slug,
+                    'question' => $poll->question,
+                    'votes_count' => $poll->votes_count,
+                    'is_closed' => $poll->isClosed(),
+                    'city' => $poll->city,
+                    'distance_miles' => $distance,
+                ];
+            });
+
+        if ($here) {
+            // Closest first; polls without coordinates sink to the bottom while
+            // keeping their newest-first order among themselves.
+            $polls = $polls->sortBy(fn (array $poll): float => $poll['distance_miles'] ?? INF)->values();
+        }
 
         return Inertia::render('Polls/Index', [
+            'near' => $here['city'] ?? null,
             'polls' => $polls,
         ]);
     }
@@ -47,14 +66,23 @@ class PollController extends Controller
     /**
      * Persist a new poll and its options.
      */
-    public function store(StorePollRequest $request): RedirectResponse
+    public function store(StorePollRequest $request, Geolocation $geo): RedirectResponse
     {
         $data = $request->validated();
 
-        $poll = DB::transaction(function () use ($data): Poll {
+        // Resolve before opening the transaction so a slow lookup never holds a
+        // write lock; a failed/disabled lookup just leaves the poll unplaced.
+        $location = $geo->locate($request->ip());
+
+        $poll = DB::transaction(function () use ($data, $location): Poll {
             $poll = Poll::create([
                 'question' => $data['question'],
                 'slug' => $this->uniqueSlug($data['question']),
+                'city' => $location['city'] ?? null,
+                'region' => $location['region'] ?? null,
+                'country_code' => $location['country_code'] ?? null,
+                'latitude' => $location['latitude'] ?? null,
+                'longitude' => $location['longitude'] ?? null,
             ]);
 
             foreach (array_values($data['options']) as $position => $label) {
@@ -87,6 +115,7 @@ class PollController extends Controller
                 'slug' => $poll->slug,
                 'question' => $poll->question,
                 'is_closed' => $poll->isClosed(),
+                'city' => $poll->city,
                 'total_votes' => (int) $poll->options->sum('votes_count'),
                 'options' => $poll->options->map(fn (PollOption $option): array => [
                     'id' => $option->id,

@@ -32,5 +32,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!-- No live IP lookups in tests; geo cases bind a fake Geolocation. -->
+        <env name="GEOLOCATION_ENABLED" value="false"/>
     </php>
 </phpunit>
