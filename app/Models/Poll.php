@@ -15,12 +15,20 @@ class Poll extends Model
         'question',
         'slug',
         'closes_at',
+        'city',
+        'region',
+        'country_code',
+        'latitude',
+        'longitude',
     ];
 
     protected function casts(): array
     {
         return [
             'closes_at' => 'datetime',
+            // Cast to numbers so distance math gets floats, not decimal strings.
+            'latitude' => 'float',
+            'longitude' => 'float',
         ];
     }
 
