@@ -1,16 +1,17 @@
 import { Link, usePage } from '@inertiajs/react';
+import Button from './Button';
 
 function Wordmark() {
     return (
         <Link
             href="/"
-            className="group inline-flex items-baseline gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
+            className="group inline-flex items-center gap-[11px] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-100"
         >
             <span
                 aria-hidden="true"
-                className="relative top-[-1px] inline-block h-2.5 w-2.5 rounded-full bg-verdigris transition-transform duration-200 group-hover:-translate-y-0.5"
+                className="inline-block h-[11px] w-[11px] rounded-full bg-teal-500 transition-transform duration-200 group-hover:-translate-y-0.5"
             />
-            <span className="font-serif text-xl font-semibold tracking-[0.2em] text-ink">
+            <span className="font-display text-xl font-extrabold tracking-[0.2em] text-teal-900">
                 PSEPHORA
             </span>
         </Link>
@@ -19,49 +20,49 @@ function Wordmark() {
 
 function Flash({ tone, children }) {
     const tones = {
-        success: 'border-verdigris/30 bg-verdigris-wash text-verdigris-deep',
-        error: 'border-ochre/40 bg-[#f7efdc] text-ochre',
+        success: 'border-teal-500/40 bg-teal-050 text-teal-700',
+        error: 'border-ochre/40 bg-yellow-100 text-ochre',
     };
 
     return (
         <div
             role="status"
-            className={`mb-8 rounded-lg border px-4 py-3 text-sm font-medium ${tones[tone]}`}
+            className={`mb-8 rounded-[14px] border-[1.5px] px-4 py-3 text-sm font-medium ${tones[tone]}`}
         >
             {children}
         </div>
     );
 }
 
-export default function Layout({ children, wide = false }) {
+export default function Layout({ children }) {
     const { flash } = usePage().props;
 
     return (
         <div className="flex min-h-full flex-col">
-            <header className="border-b border-line/70">
-                <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-6 py-5">
+            <header className="border-b border-cream-300">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center px-6 py-6 sm:px-10">
+                    <span aria-hidden="true" />
                     <Wordmark />
-                    <Link
-                        href="/polls/create"
-                        className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-marble transition-colors duration-200 hover:bg-verdigris-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
-                    >
-                        Start a poll
-                    </Link>
+                    <div className="justify-self-end">
+                        <Button href="/polls/create" size="sm">
+                            Start a poll
+                        </Button>
+                    </div>
                 </div>
             </header>
 
-            <main className="mx-auto w-full flex-1 px-6 py-12" style={{ maxWidth: wide ? '56rem' : '42rem' }}>
+            <main className="mx-auto w-full max-w-[640px] flex-1 px-6 pb-24 pt-16 sm:px-10 sm:pt-[72px]">
                 {flash?.success && <Flash tone="success">{flash.success}</Flash>}
                 {flash?.error && <Flash tone="error">{flash.error}</Flash>}
                 {children}
             </main>
 
-            <footer className="border-t border-line/70">
-                <div className="mx-auto w-full max-w-4xl px-6 py-8">
-                    <p className="max-w-prose text-sm leading-relaxed text-stone">
-                        <span className="font-serif italic text-ink-soft">psephora</span> takes its
-                        name from the <span className="font-serif italic">psephos</span>: the small
-                        pebble ancient Athenians dropped into an urn to cast a vote. No account
+            <footer className="border-t border-cream-300">
+                <div className="mx-auto w-full max-w-[640px] px-6 py-10 sm:px-10">
+                    <p className="text-base leading-relaxed text-ink-400">
+                        <em className="italic font-medium text-ink-600">psephora</em> takes its name
+                        from the <em className="italic font-medium text-ink-600">psephos</em>: the
+                        small pebble ancient Athenians dropped into an urn to cast a vote. No account
                         needed; just pick a side.
                     </p>
                 </div>

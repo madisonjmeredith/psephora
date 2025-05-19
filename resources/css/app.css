@@ -6,22 +6,48 @@
 @source '../**/*.jsx';
 
 @theme {
-    /* Type — a classical serif for questions, Plex for UI, mono for tallies */
-    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+    /* Type — Poppins carries the whole UI; Space Grotesk is reserved for
+       tabular numerals (poll %, counts) and tracked micro-labels. */
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-numeric: 'Space Grotesk', 'Poppins', ui-monospace, monospace;
+    /* Aliases so any stray serif/mono class still renders in-family */
+    --font-serif: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Space Grotesk', 'Poppins', ui-monospace, monospace;
 
-    /* Palette — marble & ink with an aged-bronze (verdigris) accent */
-    --color-marble: #f3f4f0;
-    --color-marble-deep: #e9ebe4;
-    --color-ink: #1b2432;
-    --color-ink-soft: #48505d;
-    --color-line: #e0e3db;
-    --color-stone: #8a9a93;
-    --color-verdigris: #1c8a6f;
-    --color-verdigris-deep: #12654f;
-    --color-verdigris-wash: #e4f0eb;
-    --color-ochre: #b0812b;
+    /* Palette — a warm civic set: cream canvas, jade-teal ink, sunflower accent.
+       Values verbatim from the Psephora design-system tokens/colors.css. */
+    --color-teal-900: #0e3b3a; /* ink / headings / the signature outline */
+    --color-teal-800: #103f3e; /* body text */
+    --color-teal-700: #12615b; /* links / leading % */
+    --color-teal-500: #1cb6a4; /* brand jade — dot, focus ring, chips */
+    --color-teal-400: #35c3b3;
+    --color-teal-200: #a8e4dc;
+    --color-teal-100: #d6f2ed;
+    --color-teal-050: #eaf8f5; /* selected vote row */
+
+    --color-yellow-600: #e0a400; /* button lip */
+    --color-yellow-500: #f7be1e; /* primary buttons, leading poll bar */
+    --color-yellow-400: #fbcb45; /* hover */
+    --color-yellow-200: #fbe7a8; /* trailing poll bars */
+    --color-yellow-100: #f6edcb; /* poll track */
+
+    --color-cream-050: #fbf9f2;
+    --color-cream-100: #f4f1e8; /* app canvas */
+    --color-cream-200: #ece7d8;
+    --color-cream-300: #e0dac7; /* soft borders, dividers */
+
+    --color-ink-600: #4a6461; /* secondary text */
+    --color-ink-400: #8da29f; /* muted / placeholder */
+
+    --color-ochre: #b0812b; /* form-error text (the brand has no red) */
+
+    /* Elevation — the signature is NOT a blur: it's stacked hard outlines
+       offset down-right. Buttons get a 2px darker-yellow bottom "lip". */
+    --shadow-stack:
+        3px 3px 0 -1px #ffffff, 3px 3px 0 0 #0e3b3a, 6px 6px 0 -1px #ffffff,
+        6px 6px 0 0 #0e3b3a;
+    --shadow-button: 0 2px 0 0 #e0a400;
 }
 
 @layer base {
@@ -31,13 +57,13 @@
     }
 
     body {
-        background-color: var(--color-marble);
-        color: var(--color-ink);
+        background-color: var(--color-cream-100);
+        color: var(--color-teal-800);
         font-family: var(--font-sans);
     }
 
     ::selection {
-        background-color: var(--color-verdigris);
+        background-color: var(--color-teal-500);
         color: white;
     }
 }
