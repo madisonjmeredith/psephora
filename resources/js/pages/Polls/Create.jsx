@@ -1,8 +1,12 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import Layout from '../../components/Layout';
+import Button from '../../components/Button';
 
 const MAX_OPTIONS = 10;
 const MIN_OPTIONS = 2;
+
+const fieldClass =
+    'w-full rounded-[14px] border-[1.5px] border-cream-300 bg-white px-4 text-teal-900 placeholder:text-ink-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30';
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
@@ -44,21 +48,41 @@ export default function Create() {
             <div className="mb-8">
                 <Link
                     href="/"
-                    className="font-mono text-xs uppercase tracking-wide text-stone transition-colors hover:text-verdigris"
+                    className="inline-flex items-center gap-2 font-numeric text-[13px] font-semibold uppercase tracking-[0.14em] text-ink-400 transition-colors hover:text-teal-700"
                 >
-                    &larr; All polls
+                    <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M19 12H5" />
+                        <path d="M12 19l-7-7 7-7" />
+                    </svg>
+                    All polls
                 </Link>
-                <h1 className="mt-4 font-serif text-3xl font-semibold text-ink sm:text-4xl">
+                <h1 className="mt-5 font-display text-[36px] font-extrabold tracking-[-0.02em] text-teal-900 sm:text-[44px]">
                     Start a poll
                 </h1>
-                <p className="mt-3 text-ink-soft">
+                <p className="mt-3 text-[18px] text-ink-600">
                     Ask a question and give people at least two ways to answer.
                 </p>
             </div>
 
-            <form onSubmit={submit} className="rounded-2xl border border-line bg-white p-6 sm:p-8">
-                <div>
-                    <label htmlFor="question" className="block text-sm font-medium text-ink">
+            <form
+                onSubmit={submit}
+                className="rounded-[18px] border-[1.5px] border-teal-900 bg-white p-7 shadow-stack sm:p-10"
+            >
+                <div className="mb-8">
+                    <label
+                        htmlFor="question"
+                        className="mb-3 block font-display text-[15px] font-semibold text-teal-900"
+                    >
                         Your question
                     </label>
                     <input
@@ -69,24 +93,26 @@ export default function Create() {
                         placeholder="What should we name the team mascot?"
                         maxLength={255}
                         autoFocus
-                        className="mt-2 w-full rounded-lg border border-line bg-marble/40 px-4 py-3 font-serif text-lg text-ink placeholder:text-stone/70 focus:border-verdigris focus:bg-white focus:outline-none focus:ring-2 focus:ring-verdigris/30"
+                        className={`${fieldClass} py-3.5 text-[18px]`}
                     />
                     {errors.question && (
                         <p className="mt-2 text-sm text-ochre">{errors.question}</p>
                     )}
                 </div>
 
-                <fieldset className="mt-8">
-                    <legend className="text-sm font-medium text-ink">Options</legend>
-                    {errors.options && <p className="mt-1 text-sm text-ochre">{errors.options}</p>}
+                <fieldset>
+                    <legend className="mb-3.5 font-display text-[15px] font-semibold text-teal-900">
+                        Options
+                    </legend>
+                    {errors.options && <p className="mb-2 text-sm text-ochre">{errors.options}</p>}
 
-                    <ul className="mt-3 space-y-3">
+                    <div className="flex flex-col gap-3.5">
                         {data.options.map((option, index) => (
-                            <li key={index}>
-                                <div className="flex items-center gap-3">
+                            <div key={index}>
+                                <div className="flex items-center gap-3.5">
                                     <span
                                         aria-hidden="true"
-                                        className="h-2 w-2 shrink-0 rounded-full bg-stone/50"
+                                        className="h-[9px] w-[9px] shrink-0 rounded-full bg-teal-500"
                                     />
                                     <input
                                         type="text"
@@ -95,51 +121,74 @@ export default function Create() {
                                         placeholder={`Option ${index + 1}`}
                                         maxLength={120}
                                         aria-label={`Option ${index + 1}`}
-                                        className="w-full rounded-lg border border-line bg-marble/40 px-4 py-2.5 text-ink placeholder:text-stone/70 focus:border-verdigris focus:bg-white focus:outline-none focus:ring-2 focus:ring-verdigris/30"
+                                        className={`${fieldClass} min-w-0 flex-1 py-2.5`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeOption(index)}
                                         disabled={data.options.length <= MIN_OPTIONS}
                                         aria-label={`Remove option ${index + 1}`}
-                                        className="shrink-0 rounded-md p-2 text-stone transition-colors hover:text-ochre disabled:cursor-not-allowed disabled:opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris"
+                                        className="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] text-ink-400 transition-colors hover:text-teal-900 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-ink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
                                     >
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                        <svg
+                                            width="17"
+                                            height="17"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M18 6L6 18" />
+                                            <path d="M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
                                 {errors[`options.${index}`] && (
-                                    <p className="ml-5 mt-1 text-sm text-ochre">
+                                    <p className="ml-[23px] mt-1 text-sm text-ochre">
                                         {errors[`options.${index}`]}
                                     </p>
                                 )}
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
 
                     {data.options.length < MAX_OPTIONS && (
                         <button
                             type="button"
                             onClick={addOption}
-                            className="mt-3 inline-flex items-center gap-2 rounded-lg border border-dashed border-line px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:border-verdigris hover:text-verdigris focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris"
+                            className="mt-4 inline-flex items-center gap-2 rounded-[14px] border-[1.5px] border-dashed border-teal-900 bg-transparent px-[18px] py-2.5 font-display text-[15px] font-semibold text-teal-900 transition-colors hover:bg-cream-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
                         >
-                            <span aria-hidden="true">+</span> Add option
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M12 5v14" />
+                                <path d="M5 12h14" />
+                            </svg>
+                            Add option
                         </button>
                     )}
                 </fieldset>
 
-                <div className="mt-8 flex items-center gap-4 border-t border-line pt-6">
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="rounded-full bg-verdigris px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-verdigris-deep disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                    >
+                <div className="my-7 h-px bg-cream-300" />
+
+                <div className="flex items-center gap-5">
+                    <Button type="submit" disabled={processing}>
                         {processing ? 'Publishing…' : 'Publish poll'}
-                    </button>
-                    <Link href="/" className="text-sm text-stone transition-colors hover:text-ink">
+                    </Button>
+                    <Button href="/" variant="ghost">
                         Cancel
-                    </Link>
+                    </Button>
                 </div>
             </form>
         </Layout>
