@@ -1,39 +1,36 @@
 import { Head, Link } from '@inertiajs/react';
 import Layout from '../../components/Layout';
+import Button from '../../components/Button';
 
 function pebbleCount(n) {
     return `${n.toLocaleString()} ${n === 1 ? 'pebble' : 'pebbles'}`;
 }
 
 function PollCard({ poll }) {
+    const meta = [`${pebbleCount(poll.votes_count)} cast`];
+    if (poll.city) {
+        meta.push(
+            poll.distance_miles != null ? `${poll.city} · ${poll.distance_miles} mi` : poll.city,
+        );
+    }
+
     return (
-        <li>
-            <Link
-                href={`/polls/${poll.slug}`}
-                className="group block rounded-xl border border-line bg-white px-6 py-5 transition-all duration-200 hover:border-verdigris/50 hover:shadow-[0_1px_0_theme(colors.verdigris)] focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
-            >
-                <h3 className="font-serif text-xl leading-snug text-ink transition-colors group-hover:text-verdigris-deep">
-                    {poll.question}
-                </h3>
-                <div className="mt-3 flex items-center gap-3 font-mono text-xs uppercase tracking-wide text-stone">
-                    <span>{pebbleCount(poll.votes_count)} cast</span>
-                    {poll.city && (
-                        <span className="text-stone/80">
-                            {poll.city}
-                            {poll.distance_miles != null && ` · ${poll.distance_miles} mi`}
-                        </span>
-                    )}
-                    {poll.is_closed && (
-                        <span className="rounded-full bg-marble-deep px-2 py-0.5 text-ink-soft">
-                            closed
-                        </span>
-                    )}
-                    <span className="ml-auto text-verdigris opacity-0 transition-opacity group-hover:opacity-100">
-                        view &rarr;
+        <Link
+            href={`/polls/${poll.slug}`}
+            className="block rounded-[18px] border-[1.5px] border-teal-900 bg-white px-7 py-6 transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-stack focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-100 motion-reduce:transition-none"
+        >
+            <h3 className="font-display text-[22px] font-semibold tracking-[-0.01em] text-teal-900">
+                {poll.question}
+            </h3>
+            <div className="mt-3 flex items-center gap-3 font-numeric text-[12.5px] uppercase tracking-[0.1em] text-ink-400">
+                <span>{meta.join('  ·  ')}</span>
+                {poll.is_closed && (
+                    <span className="rounded-full border border-cream-300 px-2 py-0.5 text-[11px] normal-case tracking-normal text-teal-700">
+                        Closed
                     </span>
-                </div>
-            </Link>
-        </li>
+                )}
+            </div>
+        </Link>
     );
 }
 
@@ -42,54 +39,52 @@ export default function Index({ polls, near }) {
         <Layout>
             <Head title="Polls" />
 
-            <section className="mb-14">
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-verdigris">
+            <section className="mb-16">
+                <p className="mb-5 font-numeric text-[13px] font-semibold uppercase tracking-[0.18em] text-teal-500">
                     Open ballot
                 </p>
-                <h1 className="font-serif text-4xl font-semibold leading-[1.1] text-ink sm:text-5xl">
+                <h1 className="font-display text-[40px] font-extrabold leading-[1.05] tracking-[-0.02em] text-teal-900 sm:text-[54px]">
                     Settle it with a pebble.
                 </h1>
-                <p className="mt-5 max-w-prose text-lg leading-relaxed text-ink-soft">
+                <p className="mt-6 max-w-[30ch] text-[19px] leading-normal text-ink-600">
                     Ask anything and let the room decide. Anyone can weigh in: no sign-up, one
                     pebble per poll.
                 </p>
-                <div className="mt-7">
-                    <Link
-                        href="/polls/create"
-                        className="inline-flex items-center rounded-full bg-verdigris px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-verdigris-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
-                    >
+                <div className="mt-8">
+                    <Button href="/polls/create" size="lg">
                         Start a poll
-                    </Link>
+                    </Button>
                 </div>
             </section>
 
             <section>
-                <h2 className="mb-5 flex items-baseline justify-between border-b border-line pb-3">
-                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">
+                <h2 className="mb-5 flex items-center justify-between border-b border-cream-300 pb-3.5">
+                    <span className="font-numeric text-[13px] font-semibold uppercase tracking-[0.16em] text-ink-400">
                         {near ? `Polls near ${near}` : 'Recent polls'}
                     </span>
-                    <span className="font-mono text-xs tabular-nums text-stone">
+                    <span className="font-numeric text-[13px] font-semibold text-ink-400">
                         {polls.length}
                     </span>
                 </h2>
 
                 {polls.length === 0 ? (
-                    <div className="rounded-xl border border-dashed border-line bg-white/60 px-6 py-14 text-center">
-                        <p className="font-serif text-xl text-ink">No polls yet.</p>
-                        <p className="mt-2 text-ink-soft">Be the first to put a question to the room.</p>
-                        <Link
-                            href="/polls/create"
-                            className="mt-6 inline-flex items-center rounded-full border border-ink px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-marble focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
-                        >
-                            Start the first poll
-                        </Link>
+                    <div className="rounded-[18px] border-[1.5px] border-dashed border-teal-900 bg-white px-6 py-14 text-center">
+                        <p className="font-display text-xl font-semibold text-teal-900">
+                            No polls yet.
+                        </p>
+                        <p className="mt-2 text-ink-600">
+                            Be the first to put a question to the room.
+                        </p>
+                        <div className="mt-6">
+                            <Button href="/polls/create">Start the first poll</Button>
+                        </div>
                     </div>
                 ) : (
-                    <ul className="space-y-3">
+                    <div className="flex flex-col gap-[18px]">
                         {polls.map((poll) => (
                             <PollCard key={poll.slug} poll={poll} />
                         ))}
-                    </ul>
+                    </div>
                 )}
             </section>
         </Layout>
