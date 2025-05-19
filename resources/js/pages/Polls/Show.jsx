@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../../components/Layout';
+import Button from '../../components/Button';
 import ResultBar from '../../components/ResultBar';
 
 function pebbleCount(n) {
@@ -17,16 +18,16 @@ function VoteForm({ poll }) {
 
     return (
         <form onSubmit={submit}>
-            <ul className="space-y-3" role="radiogroup" aria-label="Poll options">
+            <ul className="flex flex-col gap-3.5" role="radiogroup" aria-label="Poll options">
                 {poll.options.map((option) => {
                     const selected = data.poll_option_id === option.id;
                     return (
                         <li key={option.id}>
                             <label
-                                className={`flex cursor-pointer items-center gap-4 rounded-xl border px-5 py-4 transition-all duration-150 ${
+                                className={`flex cursor-pointer items-center gap-4 rounded-[14px] border-[1.5px] border-teal-900 px-[22px] py-[18px] transition-[background-color,box-shadow] duration-150 ${
                                     selected
-                                        ? 'border-verdigris bg-verdigris-wash ring-1 ring-verdigris'
-                                        : 'border-line bg-white hover:border-verdigris/50'
+                                        ? 'bg-teal-050 ring-[1.5px] ring-teal-500'
+                                        : 'bg-white hover:bg-cream-050'
                                 }`}
                             >
                                 <input
@@ -39,17 +40,19 @@ function VoteForm({ poll }) {
                                 />
                                 <span
                                     aria-hidden="true"
-                                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                                        selected ? 'border-verdigris' : 'border-stone/50'
+                                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors ${
+                                        selected ? 'border-teal-500 bg-teal-500' : 'border-teal-900'
                                     }`}
                                 >
                                     <span
-                                        className={`h-2.5 w-2.5 rounded-full bg-verdigris transition-transform duration-150 ${
-                                            selected ? 'scale-100' : 'scale-0'
+                                        className={`h-[9px] w-[9px] rounded-full bg-white transition-opacity duration-150 ${
+                                            selected ? 'opacity-100' : 'opacity-0'
                                         }`}
                                     />
                                 </span>
-                                <span className="font-serif text-lg text-ink">{option.label}</span>
+                                <span className="font-display text-[19px] font-medium text-teal-900">
+                                    {option.label}
+                                </span>
                             </label>
                         </li>
                     );
@@ -60,13 +63,14 @@ function VoteForm({ poll }) {
                 <p className="mt-3 text-sm text-ochre">{errors.poll_option_id}</p>
             )}
 
-            <button
-                type="submit"
-                disabled={processing || data.poll_option_id === null}
-                className="mt-6 rounded-full bg-verdigris px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-verdigris-deep disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-verdigris focus-visible:ring-offset-2 focus-visible:ring-offset-marble"
-            >
-                {processing ? 'Casting…' : 'Cast your pebble'}
-            </button>
+            <div className="mt-[26px]">
+                <Button
+                    type="submit"
+                    disabled={processing || data.poll_option_id === null}
+                >
+                    {processing ? 'Casting…' : 'Cast your pebble'}
+                </Button>
+            </div>
         </form>
     );
 }
@@ -77,7 +81,7 @@ function Results({ poll, votedOptionId }) {
 
     return (
         <div>
-            <ul className="space-y-5">
+            <ul className="flex flex-col gap-[18px]">
                 {poll.options.map((option) => (
                     <ResultBar
                         key={option.id}
@@ -89,7 +93,7 @@ function Results({ poll, votedOptionId }) {
                     />
                 ))}
             </ul>
-            <p className="mt-6 font-mono text-xs uppercase tracking-wide text-stone">
+            <p className="mt-7 font-numeric text-[12.5px] font-semibold uppercase tracking-[0.14em] text-ink-400">
                 {pebbleCount(total)} cast
             </p>
         </div>
@@ -115,27 +119,41 @@ export default function Show({ poll, hasVoted, votedOptionId }) {
             <div className="mb-8">
                 <Link
                     href="/"
-                    className="font-mono text-xs uppercase tracking-wide text-stone transition-colors hover:text-verdigris"
+                    className="inline-flex items-center gap-2 font-numeric text-[13px] font-semibold uppercase tracking-[0.14em] text-ink-400 transition-colors hover:text-teal-700"
                 >
-                    &larr; All polls
+                    <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M19 12H5" />
+                        <path d="M12 19l-7-7 7-7" />
+                    </svg>
+                    All polls
                 </Link>
-                <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight text-ink sm:text-4xl">
+                <h1 className="mt-5 font-display text-[40px] font-extrabold leading-[1.08] tracking-[-0.02em] text-teal-900 sm:text-[46px]">
                     {poll.question}
                 </h1>
-                <div className="mt-3 flex items-center gap-3 font-mono text-xs uppercase tracking-wide text-stone">
+                <div className="mt-4 flex flex-wrap items-center gap-3 font-numeric text-[13px] font-semibold uppercase tracking-[0.14em] text-ink-400">
                     {poll.city && <span>Asked from {poll.city}</span>}
                     {hasVoted && !poll.is_closed && (
-                        <span className="text-verdigris-deep">You’ve cast your pebble</span>
+                        <span className="text-teal-700">You’ve cast your pebble</span>
                     )}
                     {poll.is_closed && (
-                        <span className="rounded-full bg-marble-deep px-2 py-0.5 text-ink-soft">
-                            closed
+                        <span className="rounded-full border border-cream-300 px-2 py-0.5 normal-case tracking-normal text-teal-700">
+                            Closed
                         </span>
                     )}
                 </div>
             </div>
 
-            <div className="rounded-2xl border border-line bg-white p-6 sm:p-8">
+            <div className="rounded-[18px] border-[1.5px] border-teal-900 bg-white p-7 shadow-stack sm:p-10">
                 {showResults ? (
                     <Results poll={poll} votedOptionId={votedOptionId} />
                 ) : (
@@ -143,12 +161,12 @@ export default function Show({ poll, hasVoted, votedOptionId }) {
                 )}
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <div className="mt-[22px] flex items-center gap-6 text-[16px]">
                 {!showResults && (
                     <button
                         type="button"
                         onClick={() => setReveal(true)}
-                        className="text-stone underline-offset-4 transition-colors hover:text-ink hover:underline"
+                        className="text-ink-600 transition-colors hover:text-teal-700"
                     >
                         Just show me the results
                     </button>
@@ -156,7 +174,7 @@ export default function Show({ poll, hasVoted, votedOptionId }) {
                 <button
                     type="button"
                     onClick={copyLink}
-                    className="ml-auto inline-flex items-center gap-2 text-stone transition-colors hover:text-verdigris"
+                    className="ml-auto text-ink-600 transition-colors hover:text-teal-700"
                 >
                     {copied ? 'Link copied' : 'Copy share link'}
                 </button>
