@@ -8,9 +8,11 @@ function pebbleCount(n) {
 
 function PollCard({ poll }) {
     const meta = [`${pebbleCount(poll.votes_count)} cast`];
-    if (poll.city) {
+    if (poll.location) {
         meta.push(
-            poll.distance_miles != null ? `${poll.city} · ${poll.distance_miles} mi` : poll.city,
+            poll.distance_miles != null
+                ? `${poll.location} · ${poll.distance_miles} mi`
+                : poll.location,
         );
     }
 

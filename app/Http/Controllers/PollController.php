@@ -7,6 +7,7 @@ use App\Http\Requests\StorePollRequest;
 use App\Models\Poll;
 use App\Models\PollOption;
 use App\Support\Geolocation;
+use App\Support\LocationLabel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class PollController extends Controller
                     'question' => $poll->question,
                     'votes_count' => $poll->votes_count,
                     'is_closed' => $poll->isClosed(),
-                    'city' => $poll->city,
+                    'location' => $poll->location,
                     'distance_miles' => $distance,
                 ];
             });
@@ -50,7 +51,7 @@ class PollController extends Controller
         }
 
         return Inertia::render('Polls/Index', [
-            'near' => $here['city'] ?? null,
+            'near' => LocationLabel::make($here['city'] ?? null, $here['region'] ?? null, $here['country_code'] ?? null),
             'polls' => $polls,
         ]);
     }
@@ -115,7 +116,7 @@ class PollController extends Controller
                 'slug' => $poll->slug,
                 'question' => $poll->question,
                 'is_closed' => $poll->isClosed(),
-                'city' => $poll->city,
+                'location' => $poll->location,
                 'total_votes' => (int) $poll->options->sum('votes_count'),
                 'options' => $poll->options->map(fn (PollOption $option): array => [
                     'id' => $option->id,

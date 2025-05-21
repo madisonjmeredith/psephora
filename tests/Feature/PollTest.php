@@ -128,7 +128,7 @@ class PollTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Polls/Index')
-                ->where('near', 'Denver')
+                ->where('near', 'Denver, CO')
                 ->where('polls.0.slug', $near->slug)
                 ->where('polls.1.slug', $mid->slug)
                 ->where('polls.2.slug', $far->slug)
@@ -149,6 +149,48 @@ class PollTest extends TestCase
                 ->where('near', null)
                 ->where('polls.0.slug', $newer->slug)
                 ->where('polls.1.slug', $older->slug)
+            );
+    }
+
+    public function test_us_location_reads_as_city_and_state_abbreviation(): void
+    {
+        $poll = Poll::factory()->create([
+            'city' => 'Seattle', 'region' => 'Washington', 'country_code' => 'US',
+        ]);
+
+        $this->assertSame('Seattle, WA', $poll->location);
+    }
+
+    public function test_non_us_location_shows_only_the_country_name(): void
+    {
+        $poll = Poll::factory()->create([
+            'city' => 'Ottawa', 'region' => 'Ontario', 'country_code' => 'CA',
+        ]);
+
+        $this->assertSame('Canada', $poll->location);
+    }
+
+    public function test_location_is_null_when_the_poll_has_no_place(): void
+    {
+        $poll = Poll::factory()->create([
+            'city' => null, 'region' => null, 'country_code' => null,
+        ]);
+
+        $this->assertNull($poll->location);
+    }
+
+    public function test_show_exposes_the_formatted_location(): void
+    {
+        $poll = Poll::factory()->create([
+            'question' => 'Where to?', 'slug' => 'where-to',
+            'city' => 'Austin', 'region' => 'Texas', 'country_code' => 'US',
+        ]);
+
+        $this->get("/polls/{$poll->slug}")
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Polls/Show')
+                ->where('poll.location', 'Austin, TX')
             );
     }
 

@@ -141,7 +141,7 @@ export default function Show({ poll, hasVoted, votedOptionId }) {
                     {poll.question}
                 </h1>
                 <div className="mt-4 flex flex-wrap items-center gap-3 font-numeric text-[13px] font-semibold uppercase tracking-[0.14em] text-ink-400">
-                    {poll.city && <span>Asked from {poll.city}</span>}
+                    {poll.location && <span>Asked from {poll.location}</span>}
                     {hasVoted && !poll.is_closed && (
                         <span className="text-teal-700">You’ve cast your pebble</span>
                     )}
